@@ -8,8 +8,31 @@ documentation: dict = {
     "del / удалить": "Удалить книгу",
     "find / найти": "Найти книгу",
     "list / список": "Вывести список всех книг",
-    "status / статус": "Установить статус книги (в наличии/выдана)"
+    "status / статус": "Установить статус книги (в наличии/выдана)",
+    "exit / выход": "Выйти из приложения"
 }
+
+books: list
+
+
+
+class Book:
+    """Класс книги"""
+
+    id: int
+    title: str
+    author: str
+    year: int
+    status: str
+
+    def __init__(self, title: str, author: str, year: int):
+        self.id = len(books)
+        self.title = title
+        self.author = author
+        self.year = year
+        self.status = "в наличии"
+
+        books.append(self)
 
 
 
