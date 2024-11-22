@@ -12,7 +12,7 @@ documentation: dict = {
     "exit / выход": "Выйти из приложения"
 }
 
-books: list
+books: list = []
 
 
 
@@ -36,14 +36,22 @@ class Book:
 
 
 
-def help(command: str = "") -> None:
+def help() -> None:
     """Выводит список доступных команд"""
 
-    if not command:
-        print("Доступные команды (вводить можно как на английском, так и на русском):")
-        for c in documentation.keys():
-            print(c, "\t", documentation[c], sep="")
-    print()
+    print("Доступные команды (вводить можно как на английском, так и на русском):")
+    for c in documentation.keys():
+        print(c, "\t", documentation[c], sep="")
+
+
+def add() -> None:
+    """Запрашивает у пользователя параметры книги и добавляет её в систему"""
+
+    title = input("Название книги: ")
+    author = input("Автор: ")
+    year = input("Год издания: ")
+
+    Book(title, author, year)
 
 
 def main() -> None:
@@ -51,14 +59,28 @@ def main() -> None:
 
     print("Добро пожаловать в систему управления библиотекой \"USLib\"!")
     print("Введите \"помощь\" для вывода всех доступных команд")
-    print()
 
     while True:
-        command: list = input("> ").split(" ")
+        command: list = input("> ")
         if command:
-            match command[0].lower():
+            match command.lower():
                 case "help" | "помощь":
                     help()
+                case "add" | "добавить":
+                    add()
+                case "del" | "удалить":
+                    delete()
+                case "find" | "найти":
+                    find()
+                case "list" | "список":
+                    show_list()
+                case "status" | "статус":
+                    status()
+                case "exit" | "выход":
+                    break
+                case _:
+                    print("Такой команды не существует")
+            print()
 
 
 
