@@ -52,8 +52,16 @@ def get_plural_books(number: int) -> str:
 def print_table_of_books(list_of_books: list) -> None:
     """Выводит переданный список книг в виде красивой таблицы"""
 
+    print(" ID  |           Название           |           Автор           | Год |  Статус ")
+    print("-----+------------------------------+---------------------------+-----+---------")
+
     for b in list_of_books:
-        print(b.id, b.title, b.author, b.year, b.status, sep="\t")
+        print(str(b.id).rjust(5),
+            b.title.center(30),
+            b.author.center(27),
+            str(b.year).center(5),
+            b.status.center(9),
+            sep="|")
 
 
 def help() -> None:
@@ -76,7 +84,7 @@ def add_book() -> None:
     if title and author and year.isdecimal():
         Book(last_id+1, title, author, int(year))
         last_id += 1
-        print(f"Книга \"{title}\" успешно добавлена в систему")
+        print(f"Книга \"{title}\" успешно добавлена в систему под id {last_id}")
     else:
         print("Необходимо корректно заполнить все поля, книга не добавлена")
 
