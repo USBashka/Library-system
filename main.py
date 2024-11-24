@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 
 
@@ -28,6 +29,7 @@ class Book:
     status: str
 
     def __init__(self, id: int, title: str, author: str, year: int):
+        """Создаёт объект книги"""
         self.id = id
         self.title = title
         self.author = author
@@ -35,7 +37,30 @@ class Book:
         self.status = "в наличии"
 
         books.append(self)
+    
+    def to_dict(self):
+        """Превращает объект в словарь для сериализации"""
+        return {
+            "id": self.id,
+            "title": self.title,
+            "author": self.author,
+            "yeat": self.year,
+            "status": self.status
+        }
 
+
+
+def save_data() -> None:
+    """Сохраняет базу книг в файл data.json"""
+
+    data: dict = {
+        "last_save_time": datetime.now().timestamp(),
+        "last_id": last_id,
+        "books": [book.to_dict() for book in books]
+    }
+
+    with open("data.json", "w", encoding="utf-8") as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
 
 
 def get_plural_books(number: int) -> str:
@@ -59,7 +84,7 @@ def print_table_of_books(list_of_books: list) -> None:
         print(str(b.id).rjust(5),
             b.title.center(30),
             b.author.center(27),
-            str(b.year).center(5),
+            str(b.year).rjust(5),
             b.status.center(9),
             sep="|")
 
@@ -84,6 +109,7 @@ def add_book() -> None:
     if title and author and year.isdecimal():
         Book(last_id+1, title, author, int(year))
         last_id += 1
+        save_data()
         print(f"Книга \"{title}\" успешно добавлена в систему под id {last_id}")
     else:
         print("Необходимо корректно заполнить все поля, книга не добавлена")
@@ -99,6 +125,7 @@ def delete_book() -> None:
         for i, b in enumerate(books):
             if b.id == int(book_id):
                 deleted_book = books.pop(i)
+                save_data()
                 print(f"Книга \"{deleted_book.title}\" успешно удалена из системы")
                 break
         if not deleted_book:
@@ -108,7 +135,7 @@ def delete_book() -> None:
 
 
 
-def find_book() -> None:
+def find_books() -> None:
     """Запрашивает по какому параметру искать, затем сам параметр, после чего выводит подходящие книги"""
 
     print("Выберите, по какому параметру искать книги:")
@@ -185,12 +212,14 @@ def set_book_status() -> None:
                 match status:
                     case "1" | "available" | "в наличии" | "1 - в наличии":
                         b.status = "в наличии"
-                        print("Статус успешно изменён")
+                        save_data()
+                        print("Статус успешно изменён на \"в наличии\"")
                         break
 
                     case "2" | "checked out" | "выдана" | "2 - выдана":
                         b.status = "выдана"
-                        print("Статус успешно изменён")
+                        save_data()
+                        print("Статус успешно изменён на \"выдана\"")
                         break
 
                     case _:
@@ -218,7 +247,7 @@ def main() -> None:
                 case "del" | "удалить":
                     delete_book()
                 case "find" | "найти":
-                    find_book()
+                    find_books()
                 case "list" | "список":
                     show_list()
                 case "status" | "статус":
