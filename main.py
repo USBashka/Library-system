@@ -3,7 +3,7 @@ import json
 
 
 
-documentation: dict = {
+documentation: dict = {  # Описания команд
     "help / помощь": "Вывести список доступных команд",
     "add / добавить": "Добавить новую книгу",
     "del / удалить": "Удалить книгу",
@@ -13,9 +13,9 @@ documentation: dict = {
     "exit / выход": "Выйти из приложения"
 }
 
-books: list = []
+books: list = []  # Список со всеми книгами в системе
 
-last_id: int = 0
+last_id: int = 0  # ID, данное последней добавленной книге
 
 
 
@@ -28,39 +28,72 @@ class Book:
     year: int
     status: str
 
-    def __init__(self, id: int, title: str, author: str, year: int):
+    def __init__(self, id: int, title: str, author: str, year: int, status: str = "в наличии"):
         """Создаёт объект книги"""
         self.id = id
         self.title = title
         self.author = author
         self.year = year
-        self.status = "в наличии"
+        self.status = status
 
         books.append(self)
     
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Превращает объект в словарь для сериализации"""
         return {
             "id": self.id,
             "title": self.title,
             "author": self.author,
-            "yeat": self.year,
+            "year": self.year,
             "status": self.status
         }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> "Book":
+        """Превращает словарь в объект книги"""
+        return cls(
+            data["id"],
+            data["title"],
+            data["author"],
+            data["year"],
+            data["status"]
+        )
 
 
 
-def save_data() -> None:
-    """Сохраняет базу книг в файл data.json"""
+def save_data(file_name: str = "data.json") -> None:
+    """Сохраняет базу книг в файл"""
 
-    data: dict = {
-        "last_save_time": datetime.now().timestamp(),
-        "last_id": last_id,
-        "books": [book.to_dict() for book in books]
-    }
+    try:
+        data: dict = {
+            "last_save_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "last_id": last_id,
+            "books": [book.to_dict() for book in books]
+        }
 
-    with open("data.json", "w", encoding="utf-8") as file:
-        json.dump(data, file, ensure_ascii=False, indent=4)
+        with open(file_name, "w", encoding="utf-8") as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)
+    except:
+        print("Сохранить базу не удалось!")
+
+
+def load_data(file_name: str = "data.json") -> None:
+    """Загружает базу книг из файла"""
+
+    global last_id
+
+    try:
+        data: dict = {}
+
+        with open(file_name, "r", encoding="utf-8") as file:
+            data = json.load(file)
+        
+        last_id = data["last_id"]
+        books = [Book.from_dict(book) for book in data["books"]]
+    except FileNotFoundError:
+        pass
+    except:
+        print("Загрузка базы не удалась!")
 
 
 def get_plural_books(number: int) -> str:
@@ -77,7 +110,7 @@ def get_plural_books(number: int) -> str:
 def print_table_of_books(list_of_books: list) -> None:
     """Выводит переданный список книг в виде красивой таблицы"""
 
-    print(" ID  |           Название           |           Автор           | Год |  Статус ")
+    print("  ID |           Название           |           Автор           | Год |  Статус ")
     print("-----+------------------------------+---------------------------+-----+---------")
 
     for b in list_of_books:
@@ -234,6 +267,7 @@ def main() -> None:
     """Основная функция приложения"""
 
     print("Добро пожаловать в систему управления библиотекой \"USLib\"!")
+    load_data()
     print("Введите \"помощь\" для вывода всех доступных команд")
 
     while True:
