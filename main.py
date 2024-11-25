@@ -73,8 +73,8 @@ def save_data(file_name: str = "data.json") -> None:
 
         with open(file_name, "w", encoding="utf-8") as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
-    except:
-        print("Сохранить базу не удалось!")
+    except Exception as e:
+        print(f"Сохранить базу не удалось! Ошибка: {e}")
 
 
 def load_data(file_name: str = "data.json") -> None:
@@ -92,8 +92,8 @@ def load_data(file_name: str = "data.json") -> None:
         books = [Book.from_dict(book) for book in data["books"]]
     except FileNotFoundError:
         pass
-    except:
-        print("Загрузка базы не удалась!")
+    except Exception as e:
+        print(f"Загрузка базы не удалась! Ошибка {e}")
 
 
 def get_plural_books(number: int) -> str:
