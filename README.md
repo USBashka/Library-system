@@ -123,5 +123,5 @@ ID взятой/возвращённой книги: 6
 
 Также есть автотесты в `tests.py`. Для запуска нужно ввести в терминале:
 ```
-python -m unittest test_main.py
+python -m unittest tests.py
 ```
