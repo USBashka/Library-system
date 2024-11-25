@@ -143,7 +143,7 @@ def add_book() -> None:
         Book(last_id+1, title, author, int(year))
         last_id += 1
         save_data()
-        print(f"Книга \"{title}\" успешно добавлена в систему под id {last_id}")
+        print(f"Книга \"{title}\" успешно добавлена в систему под ID {last_id}")
     else:
         print("Необходимо корректно заполнить все поля, книга не добавлена")
 
@@ -183,20 +183,20 @@ def find_books() -> None:
         case "1" | "title" | "название" | "1 - название":
             title: str = input("Введите название книги: ")
             for b in books:
-                if b.title == title:
+                if title.lower() in b.title.lower():
                     matched_books.append(b)
             if matched_books:
-                print(f"Найдено {len(matched_books)} {get_plural_books(len(matched_books))} с данным названием:")
+                print(f"В библиотеке {len(matched_books)} {get_plural_books(len(matched_books))} с похожим названием:")
             else:
                 print("Книг с данным названием не найдено")
 
         case "2" | "author" | "автор" | "2 - автор":
             author: str = input("Введите автора книги: ")
             for b in books:
-                if b.author == author:
+                if author.lower() in b.author.lower():
                     matched_books.append(b)
             if matched_books:
-                print(f"Найдено {len(matched_books)} {get_plural_books(len(matched_books))} с данным автором:")
+                print(f"В библиотеке {len(matched_books)} {get_plural_books(len(matched_books))} с похожим автором:")
             else:
                 print("Книг с данным автором не найдено")
 
@@ -207,7 +207,7 @@ def find_books() -> None:
                     if b.year == int(year):
                         matched_books.append(b)
                 if matched_books:
-                    print(f"Найдено {len(matched_books)} {get_plural_books(len(matched_books))} с данным годом:")
+                    print(f"В библиотеке {len(matched_books)} {get_plural_books(len(matched_books))} с данным годом:")
                 else:
                     print("Книг с данным годом не найдено")
             else:
